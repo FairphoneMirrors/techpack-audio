@@ -189,7 +189,7 @@ static void *def_tasha_mbhc_cal(void)
 		return NULL;
 
 #define S(X, Y) ((WCD_MBHC_CAL_PLUG_TYPE_PTR(tasha_wcd_cal)->X) = (Y))
-	S(v_hs_max, 1500);
+	S(v_hs_max, 1600);
 #undef S
 #define S(X, Y) ((WCD_MBHC_CAL_BTN_DET_PTR(tasha_wcd_cal)->X) = (Y))
 	S(num_btn, WCD_MBHC_DEF_BUTTONS);
@@ -199,6 +199,17 @@ static void *def_tasha_mbhc_cal(void)
 	btn_high = ((void *)&btn_cfg->_v_btn_low) +
 		(sizeof(btn_cfg->_v_btn_low[0]) * btn_cfg->num_btn);
 
+//[FairPhone][jinjia]=2019.01.23=Adjust the voltage range threshold for headset multi-key detection. -s
+#if 1
+	btn_high[0] = 75;
+	btn_high[1] = 125;
+	btn_high[2] = 237;
+	btn_high[3] = 450;
+	btn_high[4] = 450;
+	btn_high[5] = 450;
+	btn_high[6] = 450;
+	btn_high[7] = 450;
+#else
 	btn_high[0] = 75;
 	btn_high[1] = 150;
 	btn_high[2] = 237;
@@ -207,6 +218,9 @@ static void *def_tasha_mbhc_cal(void)
 	btn_high[5] = 450;
 	btn_high[6] = 450;
 	btn_high[7] = 450;
+#endif
+//[FairPhone][jinjia]=2019.01.23=Adjust the voltage range threshold for headset multi-key detection. -e
+
 
 	return tasha_wcd_cal;
 }

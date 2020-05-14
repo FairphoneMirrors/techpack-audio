@@ -1261,32 +1261,16 @@ static struct snd_soc_dai_link msm8952_common_be_dai[] = {
 	},
 };
 
-static struct snd_soc_dai_link msm8952_hdmi_dba_dai_link[] = {
-	{
-		.name = LPASS_BE_QUIN_MI2S_RX,
-		.stream_name = "Quinary MI2S Playback",
-		.cpu_dai_name = "msm-dai-q6-mi2s.5",
-		.platform_name = "msm-pcm-routing",
-		.codec_dai_name = "msm_hdmi_dba_codec_rx_dai",
-		.codec_name = "msm-hdmi-dba-codec-rx",
-		.no_pcm = 1,
-		.dpcm_playback = 1,
-		.id = MSM_BACKEND_DAI_QUINARY_MI2S_RX,
-		.be_hw_params_fixup = msm_quin_be_hw_params_fixup,
-		.ops = &msm8952_quin_mi2s_be_ops,
-		.ignore_pmdown_time = 1, /* dai link has playback support */
-		.ignore_suspend = 1,
-	},
-};
-
+//[FairPhone][Audio][jinjia]=2018.11.21=smart amp porting. -s
 static struct snd_soc_dai_link msm8952_quin_dai_link[] = {
 	{
 		.name = LPASS_BE_QUIN_MI2S_RX,
 		.stream_name = "Quinary MI2S Playback",
 		.cpu_dai_name = "msm-dai-q6-mi2s.5",
 		.platform_name = "msm-pcm-routing",
-		.codec_dai_name = "snd-soc-dummy-dai",
-		.codec_name = "snd-soc-dummy",
+		.codec_dai_name = "aw8898-aif",
+		.codec_name = "aw8898_smartpa",
+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS,
 		.no_pcm = 1,
 		.dpcm_playback = 1,
 		.id = MSM_BACKEND_DAI_QUINARY_MI2S_RX,
@@ -1296,6 +1280,7 @@ static struct snd_soc_dai_link msm8952_quin_dai_link[] = {
 		.ignore_suspend = 1,
 	},
 };
+//[FairPhone][Audio][jinjia]=2018.11.21=smart amp porting. -e
 
 static struct snd_soc_dai_link msm8952_tdm_be_dai_link[] = {
 	/* TDM be dai links */
@@ -1367,14 +1352,16 @@ struct msm895x_wsa881x_dev_info {
 static struct snd_soc_aux_dev *msm895x_aux_dev;
 static struct snd_soc_codec_conf *msm895x_codec_conf;
 
+//[FairPhone][Audio][jinjia]=2018.11.21=smart amp porting. -s
 static struct snd_soc_dai_link msm8952_tasha_dai_links[
 ARRAY_SIZE(msm8952_common_fe_dai) +
 ARRAY_SIZE(msm8952_tasha_fe_dai) +
 ARRAY_SIZE(msm8952_tdm_fe_dai) +
 ARRAY_SIZE(msm8952_common_be_dai) +
 ARRAY_SIZE(msm8952_tasha_be_dai) +
-ARRAY_SIZE(msm8952_hdmi_dba_dai_link) +
+ARRAY_SIZE(msm8952_quin_dai_link) +
 ARRAY_SIZE(msm8952_tdm_be_dai_link)];
+//[FairPhone][Audio][jinjia]=2018.11.21=smart amp porting. -e
 
 int msm8952_init_wsa_dev(struct platform_device *pdev,
 			struct snd_soc_card *card)
@@ -1611,9 +1598,13 @@ struct snd_soc_card *populate_snd_card_dailinks(struct device *dev)
 	if (of_property_read_bool(dev->of_node, "qcom,hdmi-dba-codec-rx")) {
 		dev_dbg(dev, "%s(): hdmi dba audio support present\n",
 				__func__);
+//[FairPhone][Audio][jinjia]=2018.11.21=smart amp porting. -s
+		/*
 		memcpy(msm8952_dai_links + len5, msm8952_hdmi_dba_dai_link,
 			sizeof(msm8952_hdmi_dba_dai_link));
 		len5 += ARRAY_SIZE(msm8952_hdmi_dba_dai_link);
+		*/
+//[FairPhone][Audio][jinjia]=2018.11.21=smart amp porting. -e
 	} else {
 		dev_dbg(dev, "%s(): No hdmi dba present, add quin dai\n",
 				__func__);
